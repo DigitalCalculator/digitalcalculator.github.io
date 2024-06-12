@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /about-us
+Disallow: /contact-us
+Disallow: /faq
+Disallow: /terms-of-service
+Disallow: /privacy-policy
