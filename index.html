@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIGITAL CALCULATOR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://source.unsplash.com/featured/?abstract,technology') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            background-blend-mode: overlay;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #00bfff;
+        }
+        input, button, select {
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 1.1em;
+            border-radius: 8px;
+            border: none;
+            width: calc(100% - 24px);
+            transition: all 0.3s ease;
+        }
+        input, select {
+            background: #fff;
+            color: #000;
+        }
+        button {
+            background: #00bfff;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #009acd;
+            transform: scale(1.05);
+        }
+        .section {
+            margin-top: 30px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: #00ffdd;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DIGITAL CALCULATOR</h1>
+
+        <div class="section">
+            <h2>Calculator</h2>
+            <input type="text" id="num1" placeholder="Enter first number">
+            <select id="num1Type">
+                <option value="binary">Binary</option>
+                <option value="decimal">Decimal</option>
+                <option value="hexadecimal">Hexadecimal</option>
+                <option value="octal">Octal</option>
+            </select>
+            <input type="text" id="num2" placeholder="Enter second number">
+            <select id="num2Type">
+                <option value="binary">Binary</option>
+                <option value="decimal">Decimal</option>
+                <option value="hexadecimal">Hexadecimal</option>
+                <option value="octal">Octal</option>
+            </select>
+            <div>
+                <button onclick="calculate('add')">Add</button>
+                <button onclick="calculate('subtract')">Subtract</button>
+                <button onclick="calculate('multiply')">Multiply</button>
+                <button onclick="calculate('divide')">Divide</button>
+            </div>
+            <div id="calcResult" class="result">Result: </div>
+        </div>
+
+        <div class="section">
+            <h2>Converter</h2>
+            <input type="text" id="convertInput" placeholder="Enter number">
+            <select id="convertFrom">
+                <option value="binary">Binary</option>
+                <option value="decimal">Decimal</option>
+                <option value="hexadecimal">Hexadecimal</option>
+                <option value="octal">Octal</option>
+            </select>
+            <select id="convertTo">
+                <option value="binary">Binary</option>
+                <option value="decimal">Decimal</option>
+                <option value="hexadecimal">Hexadecimal</option>
+                <option value="octal">Octal</option>
+            </select>
+            <button onclick="convert()">Convert</button>
+            <div id="convertResult" class="result">Result: </div>
+        </div>
+    </div>
+
+    <script>
+        function parseInput(input, type) {
+            switch (type) {
+                case 'binary':
+                    return parseInt(input, 2);
+                case 'decimal':
+                    return parseInt(input, 10);
+                case 'hexadecimal':
+                    return parseInt(input, 16);
+                case 'octal':
+                    return parseInt(input, 8);
+                default:
+                    return NaN;
+            }
+        }
+
+        function formatOutput(number, type) {
+            switch (type) {
+                case 'binary':
+                    return number.toString(2);
+                case 'decimal':
+                    return number.toString(10);
+                case 'hexadecimal':
+                    return number.toString(16).toUpperCase();
+                case 'octal':
+                    return number.toString(8);
+                default:
+                    return 'Invalid type';
+            }
+        }
+
+        function calculate(operation) {
+            const num1 = document.getElementById('num1').value;
+            const num1Type = document.getElementById('num1Type').value;
+            const num2 = document.getElementById('num2').value;
+            const num2Type = document.getElementById('num2Type').value;
+            let result;
+
+            const parsedNum1 = parseInput(num1, num1Type);
+            const parsedNum2 = parseInput(num2, num2Type);
+
+            if (isNaN(parsedNum1) || isNaN(parsedNum2)) {
+                alert('Please enter valid numbers');
+                return;
+            }
+
+            switch (operation) {
+                case 'add':
+                    result = parsedNum1 + parsedNum2;
+                    break;
+                case 'subtract':
+                    result = parsedNum1 - parsedNum2;
+                    break;
+                case 'multiply':
+                    result = parsedNum1 * parsedNum2;
+                    break;
+                case 'divide':
+                    if (parsedNum2 === 0) {
+                        alert('Cannot divide by zero');
+                        return;
+                    }
+                    result = Math.floor(parsedNum1 / parsedNum2);
+                    break;
+                default:
+                    result = 'Invalid operation';
+            }
+
+            const outputType = document.getElementById('num1Type').value; // Assuming output in the same type as num1
+            document.getElementById('calcResult').innerText = `Result: ${formatOutput(result, outputType)}`;
+        }
+
+        function convert() {
+            const input = document.getElementById('convertInput').value;
+            const fromFormat = document.getElementById('convertFrom').value;
+            const toFormat = document.getElementById('convertTo').value;
+
+            const parsedNum = parseInput(input, fromFormat);
+
+            if (isNaN(parsedNum)) {
+                alert('Please enter a valid number');
+                return;
+            }
+
+            const result = formatOutput(parsedNum, toFormat);
+            document.getElementById('convertResult').innerText = `Result: ${result}`;
+        }
+    </script>
+</body>
+</html>
